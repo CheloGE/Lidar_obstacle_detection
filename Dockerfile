@@ -1,5 +1,4 @@
-#FROM rikorose/gcc-cmake:gcc-5
-FROM ubuntu:16.04
+FROM nvidia/opengl:1.0-glvnd-runtime-ubuntu16.04
 
 LABEL author="Marcelo Garcia"
 
@@ -15,6 +14,7 @@ RUN apt-get update --fix-missing && apt-get install -y \
     zlib1g-dev \
     libpcl-dev \
     cmake
+
 
 WORKDIR /app
 
