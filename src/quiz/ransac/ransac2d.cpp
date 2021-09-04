@@ -69,14 +69,62 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	// TODO: Fill in this function
 
 	// For max iterations 
-
+	while(maxIterations--)
+	{	
 	// Randomly sample subset and fit line
-
+		std::unordered_set<int> inliers_indx; // set structure helps us to get only unique points
+		while (inliers_indx.size()<2)
+		{
+			inliers_indx.insert(rand()%(cloud->points.size()));
+		}
 	// Measure distance between every point and fitted line
-	// If distance is smaller than threshold count it as inlier
+	float x1, y1, x2, y2;
 
+	auto itr = inliers_indx.begin();
+	x1 = cloud -> points[*itr].x;
+	y1 = cloud -> points[*itr].y;
+	itr++;
+	x2 = cloud -> points[*itr].x;
+	y2 = cloud -> points[*itr].y;
+
+	float dy = (y2-y1);
+	float dx = (x2-x1);
+	// line equation y = m*x+b
+	float m = dy/dx;
+	float b = y2 - m*x2;
+	
+	
+	for (size_t i = 0; i < cloud->points.size(); i++)
+	{
+		if(inliers_indx.count(i)==1){ //if cloud index i presented in inliers_indx not process point
+			continue;
+		}
+		
+		float x3, y3, x4, y4;
+
+		x3 = cloud -> points[i].x;
+		y3 = cloud -> points[i].y;
+		// perpendicular line to previous line y = -1/m*x+b2
+		float b2 = y3 + x3/m;
+		x4 = m*(b2-b)/(m*m+1);
+		y4 = m * x4 + b;
+		float dist = sqrt((y3-y4)*(y3-y4)+(x3-x4)*(x3-x4));
+		// If distance is smaller than threshold count it as inlier
+		if (dist<distanceTol)
+		{
+			inliers_indx.insert(i);
+		}
+	
+		
+	}
+
+	if (inliers_indx.size()>inliersResult.size())
+	{
+		inliersResult = inliers_indx;
+	}
 	// Return indicies of inliers from fitted line with most inliers
 	
+	}
 	return inliersResult;
 
 }
@@ -92,7 +140,7 @@ int main ()
 	
 
 	// TODO: Change the max iteration and distance tolerance arguments for Ransac function
-	std::unordered_set<int> inliers = Ransac(cloud, 0, 0);
+	std::unordered_set<int> inliers = Ransac(cloud, 10, 1.0);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr  cloudInliers(new pcl::PointCloud<pcl::PointXYZ>());
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloudOutliers(new pcl::PointCloud<pcl::PointXYZ>());
