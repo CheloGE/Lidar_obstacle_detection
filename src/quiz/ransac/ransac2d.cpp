@@ -115,7 +115,6 @@ std::unordered_set<int> RansacLine(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, in
 		{
 			inliersResult = inliers_indx;
 		}
-		
 	}
 	// Return indicies of inliers from fitted line with most inliers
 	return inliersResult;
@@ -127,10 +126,11 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
 	srand(time(NULL)); //sets a seed for rand function based on the system current clock-time
 
 	// measure Time segmentation process
-    auto startTime = std::chrono::steady_clock::now();
+	auto startTime = std::chrono::steady_clock::now();
 
 	// For max iterations
-	while (maxIterations--){
+	while (maxIterations--)
+	{
 
 		// Randomly sample subset
 		std::unordered_set<int> inliers_indx; // set structure helps us to get only unique points
@@ -151,11 +151,11 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
 		float y3 = cloud->points[*iter].y;
 		float z3 = cloud->points[*iter].z;
 
-		float A = (y2-y1)*(z3-z1)-(z2-z1)*(y3-y1);
-		float B = (z2-z1)*(x3-x1)-(x2-x1)*(z3-z1);
-		float C = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
-		float D = -(A*x1+B*y1+C*z1);
-		
+		float A = (y2 - y1) * (z3 - z1) - (z2 - z1) * (y3 - y1);
+		float B = (z2 - z1) * (x3 - x1) - (x2 - x1) * (z3 - z1);
+		float C = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
+		float D = -(A * x1 + B * y1 + C * z1);
+
 		for (size_t i = 0; i < cloud->points.size(); i++)
 		{
 			if (inliers_indx.count(i) == 1)
@@ -168,7 +168,7 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
 			float z = cloud->points[i].z;
 
 			// Calculate distance
-			float dist = abs(A*x+B*y+C*z+D)/sqrt(A*A+B*B+C*C);
+			float dist = abs(A * x + B * y + C * z + D) / sqrt(A * A + B * B + C * C);
 
 			// If distance is smaller than threshold count it as inlier
 			if (dist < distanceTol)
@@ -181,14 +181,12 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
 		{
 			inliersResult = inliers_indx;
 		}
-
-
 	}
 
 	auto endTime = std::chrono::steady_clock::now();
-    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-    std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
-	
+	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+	std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
+
 	// Return indicies of inliers from fitted line with most inliers
 	return inliersResult;
 }
@@ -203,7 +201,7 @@ int main()
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData();
 	// Uncomment if you want to create data for plane model
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData3D();
-	
+
 	/* Finu-tune max iteration and distance tolerance arguments for Ransac function */
 	// Uncomment if you want to perform RANSAC with a line model
 	// std::unordered_set<int> inliers = RansacLine(cloud, 10, 1.0);
