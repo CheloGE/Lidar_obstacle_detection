@@ -63,13 +63,23 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
     std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = PPC->Clustering(segmentCloud.first, 1.0, 3, 30);
 
     int clusterId = 0;
-    std::vector<Color> colors = {Color(1, 0, 0), Color(0, 1, 1), Color(0, 0, 1)};
-
+    std::vector<Color> colors = {Color(1, 1, 0), Color(0, 1, 1), Color(0, 0, 1)};
+    bool render_clusters = true;
+    bool render_boxes = true;
     for (pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
     {
-        std::cout << "cluster size ";
-        PPC->numPoints(cluster);
-        renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId]);
+        if (render_clusters)
+        {
+            std::cout << "cluster size ";
+            PPC->numPoints(cluster);
+            renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId]);
+        }
+        if (render_boxes)
+        {
+            Box box = PPC->BoundingBox(cluster);
+            renderBox(viewer, box, clusterId);
+        }
+         
         ++clusterId;
     }
 }
