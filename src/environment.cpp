@@ -107,7 +107,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer)
     // renderPointCloud(viewer, segmentCloud.first, "obstacleCloud", Color(1, 0, 0));
     renderPointCloud(viewer, segmentCloud.second, "roadCloud", Color(0, 1, 0));
 
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->CustomClustering(segmentCloud.first, 0.3, 5, 300);
+    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->CustomClustering(segmentCloud.first, 0.25, 25, 450);
 
     int clusterId = 0;
     std::vector<Color> colors = {Color(1, 1, 0), Color(0, 1, 1), Color(0, 0, 1),
@@ -151,7 +151,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, ProcessPointCloud
     // renderPointCloud(viewer, segmentCloud.first, "obstacleCloud", Color(1, 0, 0));
     renderPointCloud(viewer, segmentCloud.second, "roadCloud", Color(0, 1, 0));
 
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->CustomClustering(segmentCloud.first, 0.25, 25, 450);
+    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->CustomClustering(segmentCloud.first, 0.45, 10, 450);
 
     int clusterId = 0;
     std::vector<Color> colors = {Color(1, 1, 0), Color(0, 1, 1), Color(0, 0, 1),
